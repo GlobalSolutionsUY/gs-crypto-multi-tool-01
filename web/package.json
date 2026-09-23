@@ -8,7 +8,8 @@
     "dev": "vite",
     "build": "tsc && vite build",
     "preview": "vite preview",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "deploy:prep": "pnpm build && pwsh -Command \"Compress-Archive -Path dist/* -DestinationPath ../dist_latest.zip -Force\""
   },
   "dependencies": {
     "lightweight-charts": "^4.2.3"
