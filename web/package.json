@@ -1,0 +1,22 @@
+{
+  "name": "crypto-multi-tool-web",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "packageManager": "pnpm@12.3.4",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "preview": "vite preview",
+    "typecheck": "tsc --noEmit",
+    "deploy:prep": "pnpm build && pwsh -Command \"Compress-Archive -Path dist/* -DestinationPath ../dist_latest.zip -Force\""
+  },
+  "dependencies": {
+    "lightweight-charts": "^4.2.3"
+  },
+  "devDependencies": {
+    "@types/node": "^20.19.43",
+    "typescript": "^5.4.3",
+    "vite": "^5.4.21"
+  }
+}

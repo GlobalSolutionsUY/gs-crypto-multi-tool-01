@@ -39,7 +39,8 @@ docs/
 │       ├── 0003-hostinger-docker-deployment.md
 │       ├── 0004-human-in-the-loop-boundary.md
 │       ├── 0005-web-client-spa-and-charts.md
-│       └── 0006-hybrid-multimodal-agent-mcp.md
+│       ├── 0006-hybrid-multimodal-agent-mcp.md
+│       └── 0007-hostinger-unified-nodejs-deployment.md
 ├── specs/                                       # Especificaciones técnicas funcionales por componente
 │   ├── data-ingestion.md                       # Conector Binance REST (read-only), rate limiting y normalización
 │   ├── spot-radar.md                           # Algoritmo de detección Spot Radar: RVOL, ATR y proyecciones
@@ -48,7 +49,8 @@ docs/
 │   ├── web-client.md                           # Especificación del cliente Web Cockpit SPA y streaming SSE
 │   └── agent-mcp-sop.md                        # Protocolo de interacción para agentes autónomos vía FastMCP
 ├── deployment/                                  # Infraestructura, despliegue y automatización
-│   ├── hostinger-vps.md                        # Configuración de Docker Compose, Nginx Reverse Proxy y SSL
+│   ├── hostinger-nodejs-unified.md             # Despliegue monoproceso en único website Node.js en Hostinger
+│   ├── hostinger-vps.md                        # Alternativa VPS: Docker Compose, Nginx Reverse Proxy y SSL
 │   └── ci-cd-pipeline.md                       # Pipeline de integración continua y despliegue vía GitHub Actions
 ├── planning/                                    # Planificación temporal y hojas de ruta
 │   └── roadmap.md                              # Roadmap consolidado: Sprint 3h MVP + Fases 2..N
