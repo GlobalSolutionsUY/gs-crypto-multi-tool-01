@@ -31,6 +31,7 @@ docs/
 │   ├── system-architecture.md                  # Arquitectura de 5 capas, pipeline desacoplado y diagramas
 │   ├── data-contracts.md                       # Modelos canónicos tipados (Pydantic Python y TypeScript)
 │   ├── heatmap-engine.md                       # Motor de renderizado on-demand de mapas de calor y gráficos anotados
+│   ├── tech-stack-and-layout.md                # Selección tecnológica, Hostinger VPS y estructura de directorios
 │   └── adr/                                    # Architecture Decision Records (ADRs)
 │       ├── README.md                           # Índice general de decisiones de arquitectura
 │       ├── 0001-pipeline-architecture.md
@@ -68,6 +69,7 @@ docs/
 | **Architecture** | [system-architecture.md](file:///e:/projects/gsolut/mvp-crypto-multi-tool/docs/architecture/system-architecture.md) | Diagrama de 5 capas: Ingesta $\rightarrow$ Motor Matemático $\rightarrow$ FastMCP $\rightarrow$ Despacho $\rightarrow$ Operadores. |
 | **Architecture** | [data-contracts.md](file:///e:/projects/gsolut/mvp-crypto-multi-tool/docs/architecture/data-contracts.md) | Modelos canónicos Pydantic (`Candle`, `MarketSnapshot`, `OpportunitySignal`) e interfaces TypeScript. |
 | **Architecture** | [heatmap-engine.md](file:///e:/projects/gsolut/mvp-crypto-multi-tool/docs/architecture/heatmap-engine.md) | Renderizado visual de mapas de calor de liquidez y gráficos de velas anotados (PNG). |
+| **Architecture** | [tech-stack-and-layout.md](file:///e:/projects/gsolut/mvp-crypto-multi-tool/docs/architecture/tech-stack-and-layout.md) | Definición formal del stack tecnológico, despliegue en Hostinger VPS (sin AWS) y estructura del repo. |
 | **Architecture** | [adr/](file:///e:/projects/gsolut/mvp-crypto-multi-tool/docs/architecture/adr/README.md) | Registro unificado de decisiones de arquitectura (ADR 0001 a 0006). |
 | **Specs** | [data-ingestion.md](file:///e:/projects/gsolut/mvp-crypto-multi-tool/docs/specs/data-ingestion.md) | Conector Binance REST (read-only), pesos de rate limiting y selección del Top 50 pares en volumen. |
 | **Specs** | [spot-radar.md](file:///e:/projects/gsolut/mvp-crypto-multi-tool/docs/specs/spot-radar.md) | Lógica matemática del Spot Radar: RVOL, ATR, contracción porcentual y rechazo de soporte. |
