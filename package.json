@@ -1,0 +1,26 @@
+{
+  "name": "crypto-multi-tool",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Crypto Multi-Tool - Unified Node.js Application for Hostinger",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js",
+    "build:web": "pnpm --filter crypto-multi-tool-web build",
+    "build": "pnpm run build:web"
+  },
+  "engines": {
+    "node": ">=20.0.0"
+  },
+  "keywords": [
+    "crypto",
+    "trading",
+    "radar",
+    "hostinger",
+    "nodejs"
+  ],
+  "author": "Global Solutions UY",
+  "license": "UNLICENSED"
+}
