@@ -44,6 +44,7 @@ env/
 node_modules/
 web/dist/
 .pnpm-debug.log*
+*.zip
 
 # Markdown Preview / Crossnote
 .crossnote/
