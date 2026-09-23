@@ -1,5 +1,55 @@
 
-# Added by MD Pretty View — Markdown Preview Enhanced pan/zoom assets
-.crossnote/
+# Environment & Secrets
 .env
 .env.*
+!.env.example
+
+# Runtime logs & data
+logs/*
+!logs/.gitkeep
+artifacts/*
+!artifacts/.gitkeep
+*.log
+*.jsonl
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+venv/
+.venv/
+env/
+
+# Node / Frontend
+node_modules/
+web/dist/
+.pnpm-debug.log*
+
+# Markdown Preview / Crossnote
+.crossnote/
+
+# OS / Editor
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/

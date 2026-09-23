@@ -1,0 +1,41 @@
+# ==============================================================================
+# Crypto Multi-Tool (Radar & Copilot) - Local Development Compose
+# ==============================================================================
+
+services:
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: cmt-backend-dev
+    restart: unless-stopped
+    env_file:
+      - .env
+    environment:
+      - ENVIRONMENT=development
+      - LOG_LEVEL=DEBUG
+      - LOGS_DIR=/app/logs
+      - ARTIFACTS_DIR=/app/artifacts
+    volumes:
+      - ./backend:/app
+      - ./logs:/app/logs
+      - ./artifacts:/app/artifacts
+    ports:
+      - "8000:8000"
+      - "8001:8001"
+    command: uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
+
+  web-cockpit:
+    image: node:20-alpine
+    container_name: cmt-web-dev
+    restart: unless-stopped
+    working_dir: /app
+    volumes:
+      - ./web:/app
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=development
+    command: sh -c "corepack enable && pnpm install && pnpm run dev --host 0.0.0.0 --port 3000"
+    depends_on:
+      - backend
