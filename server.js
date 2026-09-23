@@ -14,19 +14,23 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 const PORT = Number(process.env.PORT) || 8000;
-const HOST = "0.0.0.0";
+const HOST = process.env.HOST || "0.0.0.0";
 const NODE_ENV = process.env.NODE_ENV || "production";
 
-// Locate static distribution folder (root dist/ or web/dist/)
-function resolveDistDir() {
-  const rootDist = path.join(__dirname, "dist");
-  if (fs.existsSync(rootDist)) return rootDist;
-  const webDist = path.join(__dirname, "web", "dist");
-  if (fs.existsSync(webDist)) return webDist;
-  return rootDist;
-}
+// Locate static distribution folder (root dist/)
+const DIST_DIR = path.join(__dirname, "dist");
 
-const DIST_DIR = resolveDistDir();
+// Dynamically load compiled server router if available
+let apiRouter = null;
+const compiledRouterPath = path.join(DIST_DIR, "server", "router.js");
+if (fs.existsSync(compiledRouterPath)) {
+  try {
+    const module = await import(`file://${compiledRouterPath}`);
+    apiRouter = module.handleApiRequest;
+  } catch (err) {
+    console.warn("[Crypto Multi-Tool] Could not load compiled server router:", err);
+  }
+}
 
 const MIME_TYPES = {
   ".html": "text/html; charset=utf-8",
@@ -42,7 +46,7 @@ const MIME_TYPES = {
   ".woff": "font/woff",
   ".woff2": "font/woff2",
   ".ttf": "font/ttf",
-  ".map": "application/json; charset=utf-8"
+  ".map": "application/json; charset=utf-8",
 };
 
 function serveFile(res, filePath, contentType) {
@@ -65,11 +69,24 @@ function serveFile(res, filePath, contentType) {
   });
 }
 
-const server = http.createServer((req, res) => {
+const server = http.createServer(async (req, res) => {
   const parsedUrl = new URL(req.url, `http://${req.headers.host || "localhost"}`);
   const pathname = parsedUrl.pathname;
 
-  // 1. Healthcheck endpoint
+  // 1. Dispatch through compiled TypeScript API router if available
+  if (apiRouter) {
+    try {
+      const handled = await apiRouter(req, res, pathname);
+      if (handled) return;
+    } catch (err) {
+      console.error("[Crypto Multi-Tool] Error handling API request:", err);
+      res.writeHead(500, { "Content-Type": "application/json" });
+      res.end(JSON.stringify({ error: "Internal Server Error", message: String(err) }));
+      return;
+    }
+  }
+
+  // 2. Fallback built-in healthcheck & status endpoints (if router not compiled)
   if (pathname === "/health" || pathname === "/api/health") {
     res.writeHead(200, { "Content-Type": "application/json" });
     res.end(
@@ -80,29 +97,30 @@ const server = http.createServer((req, res) => {
         node_version: process.version,
         environment: NODE_ENV,
         binance_auth: Boolean(process.env.BINANCE_API_KEY),
-        telegram_auth: Boolean(process.env.TELEGRAM_BOT_TOKEN)
+        telegram_auth: Boolean(process.env.TELEGRAM_BOT_TOKEN),
+        timestamp_utc: new Date().toISOString(),
       })
     );
     return;
   }
 
-  // 2. API Endpoints
-  if (pathname.startsWith("/api/")) {
-    if (pathname === "/api/radar/status") {
-      res.writeHead(200, { "Content-Type": "application/json" });
-      res.end(
-        JSON.stringify({
-          daemon: "running",
-          scanned: 50,
-          filtered: 44,
-          watch_count: 4,
-          ready_count: 2,
-          btc_regime: "SIDEWAYS_SAFE"
-        })
-      );
-      return;
-    }
+  if (pathname === "/api/radar/status") {
+    res.writeHead(200, { "Content-Type": "application/json" });
+    res.end(
+      JSON.stringify({
+        daemon: "running",
+        scanned: 50,
+        filtered: 44,
+        watch_count: 4,
+        ready_count: 2,
+        btc_regime: "SIDEWAYS_SAFE",
+        last_scan_utc: new Date().toISOString(),
+      })
+    );
+    return;
+  }
 
+  if (pathname.startsWith("/api/")) {
     res.writeHead(404, { "Content-Type": "application/json" });
     res.end(JSON.stringify({ error: "Endpoint not found", path: pathname }));
     return;

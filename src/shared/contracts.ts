@@ -1,4 +1,7 @@
-// Contratos Canónicos TypeScript para Web Cockpit (crypto-multi-tool)
+/**
+ * Contratos Canónicos de Datos (TypeScript)
+ * Compartidos entre el Cliente SPA (Web Cockpit) y el Servidor (Radar Engine)
+ */
 
 export type OpportunityStatus =
   | "DISCOVERY"
@@ -63,4 +66,25 @@ export interface OpportunitySignal {
   causalDiagnosis: string[];
   annotatedChartPath?: string;
   heatmapPath?: string;
+}
+
+export interface HealthResponse {
+  status: "healthy" | "degraded" | "unhealthy";
+  service: string;
+  runtime: string;
+  node_version: string;
+  environment: string;
+  binance_auth: boolean;
+  telegram_auth: boolean;
+  timestamp_utc: string;
+}
+
+export interface RadarStatusResponse {
+  daemon: "running" | "idle" | "stopped";
+  scanned: number;
+  filtered: number;
+  watch_count: number;
+  ready_count: number;
+  btc_regime: "BULL_EXPANSION" | "SIDEWAYS_SAFE" | "CRASH_HALT";
+  last_scan_utc?: string;
 }

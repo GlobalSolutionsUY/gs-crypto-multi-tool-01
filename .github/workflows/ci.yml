@@ -1,42 +1,14 @@
-name: CI Pipeline - Lint & Test
+name: CI Pipeline - Lint & Build
 
 on:
   push:
-    branches: [ master, "feat/*", "fix/*", "docs/*" ]
+    branches: [ master, "feat/*", "fix/*", "docs/*", "refactor/*" ]
   pull_request:
     branches: [ master ]
 
 jobs:
-  backend-checks:
-    name: Backend Lint & Tests
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-
-      - name: Set up Python 3.11
-        uses: actions/setup-python@v5
-        with:
-          python-version: "3.11"
-          cache: "pip"
-
-      - name: Install backend dependencies
-        run: |
-          python -m pip install --upgrade pip
-          pip install -r backend/requirements-dev.txt
-
-      - name: Run Ruff Linter
-        run: |
-          ruff check backend/
-
-      - name: Run Pytest Suite
-        env:
-          PYTHONPATH: backend
-        run: |
-          pytest backend/tests/ -v
-
-  frontend-checks:
-    name: Frontend Lint & Build
+  fullstack-checks:
+    name: Fullstack TypeScript & Node.js Checks
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
@@ -52,14 +24,21 @@ jobs:
         with:
           node-version: 20
           cache: "pnpm"
-          cache-dependency-path: web/pnpm-lock.yaml
+          cache-dependency-path: pnpm-lock.yaml
 
-      - name: Install frontend dependencies
-        working-directory: ./web
+      - name: Install dependencies
         run: |
           pnpm install
+          pnpm approve-builds --all
 
-      - name: Typecheck and Build SPA
-        working-directory: ./web
+      - name: Validate Server Syntax
+        run: |
+          node --check server.js
+
+      - name: Typecheck Fullstack Codebase
+        run: |
+          pnpm run typecheck
+
+      - name: Build SPA & Server Bundle
         run: |
           pnpm run build

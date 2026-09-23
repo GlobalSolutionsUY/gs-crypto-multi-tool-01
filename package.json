@@ -6,13 +6,26 @@
   "description": "Crypto Multi-Tool - Unified Node.js Application for Hostinger",
   "main": "server.js",
   "scripts": {
+    "dev": "vite",
+    "build:client": "vite build",
+    "build:server": "vite build --ssr src/server/router.ts --outDir dist/server --emptyOutDir false",
+    "build": "tsc --noEmit && vite build && vite build --ssr src/server/router.ts --outDir dist/server --emptyOutDir false",
+    "preview": "vite preview",
     "start": "node server.js",
-    "dev": "node server.js",
-    "build:web": "pnpm --filter crypto-multi-tool-web build",
-    "build": "pnpm run build:web"
+    "test": "node --test tests/*.test.js",
+    "typecheck": "tsc --noEmit",
+    "lint": "tsc --noEmit"
   },
   "engines": {
     "node": ">=20.0.0"
+  },
+  "dependencies": {
+    "lightweight-charts": "^4.2.3"
+  },
+  "devDependencies": {
+    "@types/node": "^20.19.43",
+    "typescript": "^5.4.3",
+    "vite": "^5.4.21"
   },
   "keywords": [
     "crypto",
