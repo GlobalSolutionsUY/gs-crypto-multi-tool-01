@@ -81,6 +81,19 @@ gs-crypto-multi-tool-01/
 │   ├── specs/               # Especificaciones funcionales por módulo
 │   ├── deployment/          # Guías de Hostinger VPS y CI/CD
 │   └── planning/            # Roadmaps y plan de sprint MVP
+├── scripts/                 # Scripts operacionales dedicados multiplataforma (.sh / .ps1)
+│   ├── build.ps1 / .sh      # Compilación de frontend e imágenes Docker
+│   ├── clean.ps1 / .sh      # Limpieza de cachés, dist y temporales
+│   ├── dev.ps1 / .sh        # Inicio del entorno de desarrollo local
+│   ├── docker-dev.ps1 / .sh # Orquestación Docker Compose desarrollo
+│   ├── docker-prod.ps1 / .sh# Orquestación Docker Compose producción
+│   ├── docker-down.ps1 / .sh# Detención de contenedores
+│   ├── help.ps1 / .sh       # Referencia de comandos
+│   ├── lint.ps1 / .sh       # Linter Ruff y TypeScript typecheck
+│   └── test.ps1 / .sh       # Suite Pytest y validación de build
+├── Makefile                 # Runner multiplataforma (enruta a .ps1 en Windows o .sh en Linux)
+├── make.ps1                 # Entry point PowerShell para Windows
+├── make.cmd                 # Entry point CMD para Windows
 ├── docker-compose.yml       # Orquestación de producción en Hostinger VPS
 ├── docker-compose.dev.yml   # Orquestación de desarrollo local con live-reload
 ├── .env.example             # Plantilla de configuración de entorno
@@ -89,7 +102,39 @@ gs-crypto-multi-tool-01/
 
 ---
 
-## 3. Inicio Rápido (Quickstart)
+## 3. Gestor de Comandos Centralizado (`make` / `scripts/`)
+
+El repositorio incluye un sistema de comandos unificado **100% multiplataforma** que opera de forma idéntica en **Windows** (PowerShell/CMD) y **Linux** (Bash):
+
+```bash
+# Ver ayuda y todos los targets disponibles
+make help        # o: .\make.ps1 help
+
+# Iniciar entorno de desarrollo local (Docker Compose con live-reload)
+make dev         # o: .\make.ps1 dev
+
+# Ejecutar linters (Ruff + TypeScript typecheck)
+make lint        # o: .\make.ps1 lint
+
+# Ejecutar suite de tests (Pytest + Build frontend)
+make test        # o: .\make.ps1 test
+
+# Compilar artefactos de producción (SPA + Docker images)
+make build       # o: .\make.ps1 build
+
+# Levantar entorno Docker en segundo plano (daemon)
+make docker-dev  # o: .\make.ps1 docker-dev
+
+# Detener todos los contenedores Docker
+make docker-down # o: .\make.ps1 docker-down
+
+# Limpiar cachés (__pycache__, .pytest_cache, dist)
+make clean       # o: .\make.ps1 clean
+```
+
+---
+
+## 4. Inicio Rápido (Quickstart)
 
 ### Requisitos Previos
 - [Docker](https://docs.docker.com/get-docker/) & Docker Compose **o**
@@ -105,7 +150,8 @@ cp .env.example .env
 ### Opción A: Ejecución con Docker Compose (Recomendada)
 Para levantar el entorno completo de desarrollo con recarga en vivo:
 ```bash
-docker compose -f docker-compose.dev.yml up --build
+make dev
+# o directamente: docker compose -f docker-compose.dev.yml up --build
 ```
 - **Web Cockpit:** [http://localhost:3000](http://localhost:3000)
 - **FastAPI Core & Docs:** [http://localhost:8000/docs](http://localhost:8000/docs)
@@ -132,17 +178,14 @@ pnpm run dev
 
 ---
 
-## 4. Calidad de Código y Testing
+## 5. Calidad de Código y Testing
 
 ```bash
-# Validar linter de backend
-ruff check backend/
+# Validar linter y tipos en todo el proyecto
+make lint
 
-# Ejecutar suite de pruebas unitarias
-pytest backend/tests/ -v
-
-# Validar tipos y compilar frontend
-cd web && pnpm run build
+# Ejecutar suite de pruebas y validar compilación
+make test
 ```
 
 ---
