@@ -1,11 +1,10 @@
-# PRD-002: Playbooks y Estrategias Operativas
+# Playbooks y Estrategias Operativas de Trading
 
-**Documento:** Trading Playbooks & Algorithmic Setups  
-**Código:** PRD-002  
-**Versión:** 1.0.0  
-**Estado:** Formalizado  
-**Módulos Asociados:** RF-01 (Spot Radar), RF-02 (Futures), RF-03 (Memes)  
-**Última Actualización:** 2026-09-23  
+- **Organización:** [GlobalSolutionsUY](https://github.com/GlobalSolutionsUY)
+- **Repositorio:** [gs-crypto-multi-tool-01](https://github.com/GlobalSolutionsUY/gs-crypto-multi-tool-01)
+- **Stakeholders / Operadores:** Ger & Freya
+- **Estado:** Formalizado y Aprobado para V1
+- **Última Actualización:** 2026-09-23
 
 ---
 
@@ -15,7 +14,7 @@ Este documento describe la mecánica cuantitativa y discrecional de los patrones
 
 ---
 
-## 2. Playbook Principal: Spot Dip & Bounce (Táctico)
+## 2. Playbook Principal: Spot Dip & Bounce (Táctico — Setup ZEC/ALLO)
 
 Este es el patrón central implementado en la Fase 1 (MVP). Modela el comportamiento típico de activos líquidos que sufren ventas forzadas o tomas de ganancia transitorias (ej. setups históricos observados en **ZEC**, **ALLO**, etc.).
 
@@ -28,46 +27,49 @@ Precio
   │        ▲
   │       / \      (Fase 1: Caída o Corrección Fuerte)
   │      /   \
-  │           \    -4% a -12% en ventana móvil (ej. 24h-48h)
+  │           \    -4% a -15% en ventana móvil (ej. 24h-48h)
   │            ▼
   │            ─────── [Fase 2: Soporte / Rechazo de Mínimos]
   │            │     ▲ (Mecha inferior / Exhaustion)
   │            │    /
-  │            └───/── [Fase 3: RVOL > 1.2 + Recuperación Temprana]
+  │            └───/── [Fase 3: RVOL > 1.25 + Recuperación Temprana]
   │               └───> [ALERTA DISPATCH: Estado READY / WATCH]
-  │                     Objetivo: +3% a +10% ──┐
-  │                     Stop / Inval: < Mínimo ─┴───────────────► Tiempo
+  │                     Objetivo 1: +3.5% a +5% ──┐
+  │                     Objetivo 2: +8% a +10%  ──┤
+  │                     Stop / Inval: < Mínimo  ──┴─────────────► Tiempo
 ```
 
 ### 2.1 Condiciones Secuenciales del Setup
 
 1. **Fase 1: Contracción Pronunciada con Liquidez:**
    - La serie temporal (1h/4h) registra una caída relativa acumulada significativa (entre $-4\%$ y $-15\%$) dentro de una ventana de lookback predeterminada ($N=24$ a $48$ periodos).
-   - El activo no debe estar muerto: el volumen diario en el par USDT debe superar el umbral mínimo de liquidez (Top 50 pares en volumen).
+   - Si la caída supera el $-25\%$ en menos de 24 horas, el filtro de riesgo la clasifica como evento anómalo de capitulación/noticia destructiva y la penaliza.
+   - El volumen diario en el par USDT debe superar el umbral mínimo de corte ($> \$10,000,000$ USD).
 
 2. **Fase 2: Testeo y Rechazo de Soporte (Exhaustion):**
-   - El precio alcanza un nivel de soporte clave (mínimo de rango previo o media móvil de control).
-   - Se evidencia rechazo de precios inferiores mediante mechas de absorción o desaceleración en el tamaño del cuerpo de las velas bajistas.
+   - El precio alcanza un nivel de soporte clave (mínimo de rango previo o media móvil de control) a menos de un $\pm 1.5\%$.
+   - Se evidencia rechazo de precios inferiores mediante mechas de absorción ($\ge 35\%$ del rango total de la vela) o desaceleración en el tamaño del cuerpo de las velas bajistas.
 
 3. **Fase 3: Giro de Impulso y Confirmación de Volumen:**
-   - **Volumen Relativo (RVOL):** El volumen en la vela de giro o estabilización supera su promedio móvil ($RVOL \ge 1.2$).
-   - **Momentum:** Giro positivo del RSI (saliendo de zona de sobreventa $< 35$ hacia neutralidad) o formación de un mínimo creciente (*higher low*) en 1h.
-   - **Distancia al Objetivo vs. Riesgo:** Relación Beneficio/Riesgo calculada teórica $\ge 2.0$.
+   - **Volumen Relativo (RVOL):** El volumen en la vela de giro o estabilización supera su promedio móvil ($RVOL_{1h} \ge 1.25$, idealmente $\ge 1.4$).
+   - **Cierre de la vela:** Cierre en la mitad superior de su rango total.
+   - **Distancia al Objetivo vs. Riesgo:** Relación Beneficio/Riesgo ($R/R$) teórica $\ge 1.8$ (óptimo $\ge 2.0$).
 
 ### 2.2 Parámetros Numéricos del Setup Spot
 
 | Variable | Parámetro por Defecto | Justificación |
 | :--- | :--- | :--- |
 | **Timeframe Principal** | `1h` (confirmado con `4h`) | Suficiente agilidad táctica sin el ruido de 5m/15m. |
-| **Objetivo de Retorno** | $+3.0\%$ a $+10.0\%$ | Movimiento realista de rebote a resistencia local. |
-| **Nivel de Invalidación** | Cierre de vela $1h < \text{Mínimo de la mecha}$ | Quiebre estructural que invalida la hipótesis de absorción. |
-| **Umbral RVOL** | $\ge 1.25$ | Garantiza interés institucional temprano en el rebote. |
+| **Contracción Previa** | $-4.0\%$ a $-15.0\%$ | Caída suficiente para agotar vendedores sin romper la estructura macro. |
+| **Umbral RVOL** | $\ge 1.25$ | Garantiza absorción institucional temprana en el rebote. |
+| **Objetivo 1 (TP1)** | $+3.5\%$ a $+5.0\%$ | Toma de ganancias parcial y reducción de riesgo a break-even. |
+| **Objetivo 2 (TP2)** | $+8.0\%$ a $+10.0\%$ | Proyección hacia resistencia intermedia. |
+| **Nivel de Invalidación (SL)** | Cierre $1h < \text{Mínimo de la mecha} - 0.3\%$ | Buffer del 0.3% para amortiguar cacerías de stops superficiales. |
+| **Ratio R:R Mínimo** | $\ge 1.8$ hacia TP1 | Si es menor a 1.8, el setup se descarta automáticamente. |
 
 ---
 
-## 3. Playbook Secundario: Liquidity Sweep & Reclaim (Futures Radar)
-
-*Planificado para Fase 2.* 
+## 3. Playbook Secundario: Liquidity Sweep & Reclaim (Futures Radar — Fase 2)
 
 Monitorea la acumulación de liquidez en los extremos del mercado de derivados y la absorción de órdenes de liquidación.
 
@@ -83,9 +85,7 @@ Monitorea la acumulación de liquidez en los extremos del mercado de derivados y
 
 ---
 
-## 4. Playbook de Protección: Meme Early Mover Filter
-
-*Planificado para Fase 2.*
+## 4. Playbook de Protección: Meme Early Mover Filter (Fase 2)
 
 Su objetivo no es pronosticar qué meme token se multiplicará por 100, sino **detectar volumen naciente y eliminar el 95% de estafas**:
 

@@ -13,35 +13,44 @@
 
 El sistema **Crypto Multi-Tool (Radar & Copilot)** es una plataforma modular y desacoplada de inteligencia de mercado y asistencia técnica para trading cuantitativo/discrecional. 
 
-Opera bajo la premisa estricta de **Copiloto ("Human-in-the-loop")**: detecta anomalías, aplica selección negativa, califica el riesgo y despacha alertas estructuradas a los operadores (**Ger & Freya**), quienes retienen el 100% de la potestad en la toma de decisiones y ejecución de capital.
+Opera bajo la premisa estricta de **Copiloto ("Human-in-the-loop")**: detecta anomalías, aplica selección negativa rigurosa, califica el riesgo y despacha diagnósticos estructurados y artefactos visuales a los operadores (**Ger & Freya**), quienes retienen el 100% de la potestad en la toma de decisiones y ejecución de capital.
 
 ---
 
 ## 2. Mapa Estructurado de la Documentación
 
-Toda la documentación técnica y de producto sigue una nomenclatura estandarizada:
+Toda la documentación técnica, de producto y de operaciones se encuentra organizada en secciones semánticas canónicas:
 
 ```text
 docs/
 ├── README.md                                    # Índice general y guía de navegación (este archivo)
-├── 01_product/                                  # Definición de producto y requerimientos de negocio
-│   ├── PRD-001_vision_and_scope.md             # Visión, principios de diseño, stakeholders y límites
-│   └── PRD-002_trading_playbooks.md            # Estrategias y patrones operativos cuantificados
-├── 02_architecture/                             # Arquitectura técnica y diseño de sistemas
-│   ├── SAD-001_system_architecture.md          # Arquitectura de pipeline, capas desacopladas y diagramas
-│   ├── SAD-002_data_contracts_and_schemas.md   # Modelos de datos estandarizados (OHLCV, Signal, Alert)
-│   └── adr/                                     # Architecture Decision Records
-│       ├── ADR-0001_modular_pipeline_vs_monolith.md
-│       ├── ADR-0002_deterministic_rules_vs_ml_blackbox.md
-│       └── ADR-0003_human_in_the_loop_isolation.md
-├── 03_technical_specs/                          # Especificaciones funcionales y técnicas por módulo
-│   ├── SPEC-001_data_ingestion_layer.md        # Conector Binance REST, rate limiting y normalización
-│   ├── SPEC-002_spot_radar_engine.md           # Algoritmo de detección, fórmulas y umbrales técnicos
-│   ├── SPEC-003_risk_filter_and_scoring.md     # Motor unificado de riesgo y matriz Oportunidad/Riesgo
-│   └── SPEC-004_notification_and_dispatch.md   # Formato de alertas, Telegram Bot y CLI Output
-├── 04_roadmap/                                  # Planificación y despliegue temporal
-│   ├── ROADMAP-001_mvp_implementation.md       # Alcance de Fase 1 (PoC de 3 horas / Spot Radar)
-│   └── ROADMAP-002_future_expansions.md        # Fases 2..N (Futures, Memes, On-chain, Execution Engine)
+├── product/                                     # Definición de producto, requerimientos de negocio y estrategias
+│   ├── vision-and-scope.md                     # Visión general, principios Human-in-the-Loop y catálogo de herramientas
+│   └── trading-playbooks.md                    # Playbooks de trading cuantificados (Dip & Bounce ZEC/ALLO, Liquidity, Memes)
+├── architecture/                                # Arquitectura técnica, diseño de sistemas y contratos
+│   ├── system-architecture.md                  # Arquitectura de 5 capas, pipeline desacoplado y diagramas
+│   ├── data-contracts.md                       # Modelos canónicos tipados (Pydantic Python y TypeScript)
+│   ├── heatmap-engine.md                       # Motor de renderizado on-demand de mapas de calor y gráficos anotados
+│   └── adr/                                    # Architecture Decision Records (ADRs)
+│       ├── README.md                           # Índice general de decisiones de arquitectura
+│       ├── 0001-pipeline-architecture.md
+│       ├── 0002-deterministic-engine-over-ml.md
+│       ├── 0003-hostinger-docker-deployment.md
+│       ├── 0004-human-in-the-loop-boundary.md
+│       ├── 0005-web-client-spa-and-charts.md
+│       └── 0006-hybrid-multimodal-agent-mcp.md
+├── specs/                                       # Especificaciones técnicas funcionales por componente
+│   ├── data-ingestion.md                       # Conector Binance REST (read-only), rate limiting y normalización
+│   ├── spot-radar.md                           # Algoritmo de detección Spot Radar: RVOL, ATR y proyecciones
+│   ├── risk-filter.md                          # Motor central de riesgo, filtros duros y matriz de scoring
+│   ├── notification-dispatch.md                # Formato de alertas estructuradas, Telegram Bot y CLI/JSONL
+│   ├── web-client.md                           # Especificación del cliente Web Cockpit SPA y streaming SSE
+│   └── agent-mcp-sop.md                        # Protocolo de interacción para agentes autónomos vía FastMCP
+├── deployment/                                  # Infraestructura, despliegue y automatización
+│   ├── hostinger-vps.md                        # Configuración de Docker Compose, Nginx Reverse Proxy y SSL
+│   └── ci-cd-pipeline.md                       # Pipeline de integración continua y despliegue vía GitHub Actions
+├── planning/                                    # Planificación temporal y hojas de ruta
+│   └── roadmap.md                              # Roadmap consolidado: Sprint 3h MVP + Fases 2..N
 └── draft/                                       # Borradores históricos y notas de ideación
     └── phase_01/
         ├── overview.md
@@ -50,31 +59,22 @@ docs/
 
 ---
 
-## 3. Matriz de Documentos y Roles
+## 3. Matriz de Documentos y Enlaces Directos
 
-| Documento | Identificador | Público Objetivo | Resumen de Alcance |
-| :--- | :--- | :--- | :--- |
-| [PRD-001](file:///E:/projects/gsolut/mvp-crypto-multi-tool/docs/01_product/PRD-001_vision_and_scope.md) | Producto / Negocio | Operadores, PM, Devs | Principios, actores (Ger & Freya), filosofía de selección negativa y qué NO es el sistema. |
-| [PRD-002](file:///E:/projects/gsolut/mvp-crypto-multi-tool/docs/01_product/PRD-002_trading_playbooks.md) | Estrategia de Trading | Operadores, Quants | Playbook Dip & Bounce (ZEC/ALLO), Memes temprano, barridas de liquidez. |
-| [SAD-001](file:///E:/projects/gsolut/mvp-crypto-multi-tool/docs/02_architecture/SAD-001_system_architecture.md) | Arquitectura | Arquitectos, Devs | Tubería desacoplada: Ingesta $\rightarrow$ Normalizador $\rightarrow$ Radars $\rightarrow$ Risk $\rightarrow$ Dispatch. |
-| [SAD-002](file:///E:/projects/gsolut/mvp-crypto-multi-tool/docs/02_architecture/SAD-002_data_contracts_and_schemas.md) | Contratos | Devs | Schemas de validación (OHLCV, MarketCandle, SignalCandidate, AlertPayload). |
-| [ADRs](file:///E:/projects/gsolut/mvp-crypto-multi-tool/docs/02_architecture/adr/) | Decisiones Técnicas | Devs, Leads | Justificación formal de pipeline modular, reglas deterministas y aislamiento del Execution Engine. |
-| [SPEC-001](file:///E:/projects/gsolut/mvp-crypto-multi-tool/docs/03_technical_specs/SPEC-001_data_ingestion_layer.md) | Especificación Técnica | Devs Backend | Ingesta Binance REST (read-only), ponderación de volumen y control de peso de peticiones. |
-| [SPEC-002](file:///E:/projects/gsolut/mvp-crypto-multi-tool/docs/03_technical_specs/SPEC-002_spot_radar_engine.md) | Especificación Técnica | Devs Algorítmicos | Lógica matemática del Spot Radar: RVOL, ATR, contracción porcentual y rechazo de soporte. |
-| [SPEC-003](file:///E:/projects/gsolut/mvp-crypto-multi-tool/docs/03_technical_specs/SPEC-003_risk_filter_and_scoring.md) | Especificación Técnica | Devs Backend / Quants | Matriz de Oportunidad vs Exposición al Riesgo y explicabilidad obligatoria. |
-| [SPEC-004](file:///E:/projects/gsolut/mvp-crypto-multi-tool/docs/03_technical_specs/SPEC-004_notification_and_dispatch.md) | Especificación Técnica | Devs Integraciones | Formato de mensajes Telegram, CLI y webhook estructurado con estados (`WATCH`, `READY`, `INVALIDATED`). |
-| [ROADMAP-001](file:///E:/projects/gsolut/mvp-crypto-multi-tool/docs/04_roadmap/ROADMAP-001_mvp_implementation.md) | Planificación | Todo el equipo | Plan de construcción vertical de 3 horas para la primera versión funcional. |
-| [ROADMAP-002](file:///E:/projects/gsolut/mvp-crypto-multi-tool/docs/04_roadmap/ROADMAP-002_future_expansions.md) | Planificación | Todo el equipo | Roadmap posterior: Liquidity Radar, Meme Radar, On-Chain y Execution Engine opt-in. |
-
----
-
-## 4. Anexos y Especificaciones de Infraestructura
-
-Adicionalmente, se mantienen disponibles las especificaciones de despliegue y herramientas complementarias:
-- **Despliegue e Infraestructura:**
-  - [hostinger-vps.md](file:///E:/projects/gsolut/mvp-crypto-multi-tool/docs/deployment/hostinger-vps.md): Configuración de Docker, Nginx Reverse Proxy y despliegue en VPS Hostinger.
-  - [ci-cd-pipeline.md](file:///E:/projects/gsolut/mvp-crypto-multi-tool/docs/deployment/ci-cd-pipeline.md): Pipeline de integración continua y despliegue automatizado vía GitHub Actions.
-- **Interfaces y Extensiones:**
-  - [web-client-spec.md](file:///E:/projects/gsolut/mvp-crypto-multi-tool/docs/specs/web-client-spec.md): Especificación del cliente web SPA y gráficos ligeros.
-  - [agent-mcp-sop.md](file:///E:/projects/gsolut/mvp-crypto-multi-tool/docs/specs/agent-mcp-sop.md): Protocolo de interacción para agentes autónomos vía MCP.
-  - [heatmap-engine.md](file:///E:/projects/gsolut/mvp-crypto-multi-tool/docs/architecture/heatmap-engine.md): Especificación del motor de mapas de calor para liquidaciones.
+| Sección | Documento | Resumen de Alcance |
+| :--- | :--- | :--- |
+| **Product** | [vision-and-scope.md](file:///e:/projects/gsolut/mvp-crypto-multi-tool/docs/product/vision-and-scope.md) | Principios rectores, actores (Ger & Freya), filosofía de selección negativa y qué NO es el sistema. |
+| **Product** | [trading-playbooks.md](file:///e:/projects/gsolut/mvp-crypto-multi-tool/docs/product/trading-playbooks.md) | Playbook Spot Dip & Bounce (ZEC/ALLO), Memes temprano, barridas de liquidez y ciclo de vida formal. |
+| **Architecture** | [system-architecture.md](file:///e:/projects/gsolut/mvp-crypto-multi-tool/docs/architecture/system-architecture.md) | Diagrama de 5 capas: Ingesta $\rightarrow$ Motor Matemático $\rightarrow$ FastMCP $\rightarrow$ Despacho $\rightarrow$ Operadores. |
+| **Architecture** | [data-contracts.md](file:///e:/projects/gsolut/mvp-crypto-multi-tool/docs/architecture/data-contracts.md) | Modelos canónicos Pydantic (`Candle`, `MarketSnapshot`, `OpportunitySignal`) e interfaces TypeScript. |
+| **Architecture** | [heatmap-engine.md](file:///e:/projects/gsolut/mvp-crypto-multi-tool/docs/architecture/heatmap-engine.md) | Renderizado visual de mapas de calor de liquidez y gráficos de velas anotados (PNG). |
+| **Architecture** | [adr/](file:///e:/projects/gsolut/mvp-crypto-multi-tool/docs/architecture/adr/README.md) | Registro unificado de decisiones de arquitectura (ADR 0001 a 0006). |
+| **Specs** | [data-ingestion.md](file:///e:/projects/gsolut/mvp-crypto-multi-tool/docs/specs/data-ingestion.md) | Conector Binance REST (read-only), pesos de rate limiting y selección del Top 50 pares en volumen. |
+| **Specs** | [spot-radar.md](file:///e:/projects/gsolut/mvp-crypto-multi-tool/docs/specs/spot-radar.md) | Lógica matemática del Spot Radar: RVOL, ATR, contracción porcentual y rechazo de soporte. |
+| **Specs** | [risk-filter.md](file:///e:/projects/gsolut/mvp-crypto-multi-tool/docs/specs/risk-filter.md) | Motor unificado de riesgo, filtros duros de descarte y matriz Oportunidad vs. Riesgo. |
+| **Specs** | [notification-dispatch.md](file:///e:/projects/gsolut/mvp-crypto-multi-tool/docs/specs/notification-dispatch.md) | Formato de mensajes Telegram con imagen adjunta, consola CLI y archivo `logs/alerts.jsonl`. |
+| **Specs** | [web-client.md](file:///e:/projects/gsolut/mvp-crypto-multi-tool/docs/specs/web-client.md) | Cockpit SPA en tiempo real con streaming Server-Sent Events (SSE) y gráficos ligeros. |
+| **Specs** | [agent-mcp-sop.md](file:///e:/projects/gsolut/mvp-crypto-multi-tool/docs/specs/agent-mcp-sop.md) | Procedimiento Operativo Estándar del Agente en 5 pasos sistemáticos y tools FastMCP. |
+| **Deployment** | [hostinger-vps.md](file:///e:/projects/gsolut/mvp-crypto-multi-tool/docs/deployment/hostinger-vps.md) | Configuración de Docker Compose, Nginx Reverse Proxy y despliegue 24/7 en VPS Hostinger. |
+| **Deployment** | [ci-cd-pipeline.md](file:///e:/projects/gsolut/mvp-crypto-multi-tool/docs/deployment/ci-cd-pipeline.md) | Pipeline de integración continua y despliegue automatizado vía GitHub Actions (Lint, Test, SSH Deploy). |
+| **Planning** | [roadmap.md](file:///e:/projects/gsolut/mvp-crypto-multi-tool/docs/planning/roadmap.md) | Hoja de ruta integral: Sprint de 3 horas para MVP V1 y fases de expansión futuras. |
