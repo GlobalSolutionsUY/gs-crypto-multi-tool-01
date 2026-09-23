@@ -2,7 +2,6 @@
 
 from functools import lru_cache
 from pathlib import Path
-from typing import Optional
 
 from pydantic import Field
 from pydantic_settings import BaseSettings, SettingsConfigDict
@@ -17,13 +16,13 @@ class Settings(BaseSettings):
 
     # Binance Market Data Adapter (Read-Only)
     # Optional in development; unauthenticated public endpoints are used when omitted
-    binance_api_key: Optional[str] = Field(default=None, description="Optional Binance API Key")
-    binance_api_secret: Optional[str] = Field(default=None, description="Optional Binance API Secret")
+    binance_api_key: str | None = Field(default=None, description="Optional Binance API Key")
+    binance_api_secret: str | None = Field(default=None, description="Optional Binance API Secret")
     binance_base_url: str = Field(default="https://api.binance.com", description="Base URL for Binance REST API")
 
     # Telegram Dispatcher (Push Notifications)
-    telegram_bot_token: Optional[str] = Field(default=None, description="Telegram Bot Token for alert dispatch")
-    telegram_chat_id: Optional[str] = Field(default=None, description="Telegram Chat ID for operators")
+    telegram_bot_token: str | None = Field(default=None, description="Telegram Bot Token for alert dispatch")
+    telegram_chat_id: str | None = Field(default=None, description="Telegram Chat ID for operators")
 
     # Network Ports
     backend_port: int = Field(default=8000, description="FastAPI listening port")

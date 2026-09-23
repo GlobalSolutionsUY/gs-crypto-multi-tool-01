@@ -1,5 +1,8 @@
 """Crypto Multi-Tool - Backend Core Engine & FastAPI Service."""
 
+from collections.abc import AsyncIterator
+from contextlib import asynccontextmanager
+
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
@@ -8,10 +11,22 @@ from app.core.logger import logger
 
 settings = get_settings()
 
+
+@asynccontextmanager
+async def lifespan(_: FastAPI) -> AsyncIterator[None]:
+    """Manage application startup and shutdown lifecycle."""
+    logger.info("Starting Crypto Multi-Tool backend [env=%s]", settings.environment)
+    logger.info("Binance Auth configured: %s", settings.has_binance_auth)
+    logger.info("Telegram Auth configured: %s", settings.has_telegram_auth)
+    yield
+    logger.info("Shutting down Crypto Multi-Tool backend")
+
+
 app = FastAPI(
     title="Crypto Multi-Tool Engine",
     description="Quantitative Spot Radar and Copilot backend",
     version="0.1.0",
+    lifespan=lifespan,
 )
 
 # Enable CORS for Web Cockpit
@@ -22,14 +37,6 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
-
-
-@app.on_event("startup")
-async def startup_event() -> None:
-    """Log application startup and environment status."""
-    logger.info("Starting Crypto Multi-Tool backend [env=%s]", settings.environment)
-    logger.info("Binance Auth configured: %s", settings.has_binance_auth)
-    logger.info("Telegram Auth configured: %s", settings.has_telegram_auth)
 
 
 @app.get("/health", tags=["Health"])

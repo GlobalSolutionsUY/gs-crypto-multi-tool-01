@@ -5,7 +5,7 @@ import logging
 import sys
 from datetime import datetime, timezone
 from pathlib import Path
-from typing import Any, Dict
+from typing import Any
 
 from app.core.config import get_settings
 
@@ -41,7 +41,7 @@ def setup_logging() -> logging.Logger:
     return logger
 
 
-def log_alert_jsonl(record: Dict[str, Any]) -> None:
+def log_alert_jsonl(record: dict[str, Any]) -> None:
     """Append a structured alert record to logs/alerts.jsonl with UTC timestamp."""
     settings = get_settings()
     log_path = Path(settings.logs_dir)

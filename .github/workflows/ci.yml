@@ -2,7 +2,7 @@ name: CI Pipeline - Lint & Test
 
 on:
   push:
-    branches: [ master, feat/*, fix/*, docs/* ]
+    branches: [ master, "feat/*", "fix/*", "docs/*" ]
   pull_request:
     branches: [ master ]
 
@@ -30,6 +30,8 @@ jobs:
           ruff check backend/
 
       - name: Run Pytest Suite
+        env:
+          PYTHONPATH: backend
         run: |
           pytest backend/tests/ -v
 
@@ -41,9 +43,9 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Install pnpm
-        uses: pnpm/action-setup@v3
+        uses: pnpm/action-setup@v4
         with:
-          version: 9
+          version: 12
 
       - name: Set up Node.js 20
         uses: actions/setup-node@v4
@@ -55,7 +57,7 @@ jobs:
       - name: Install frontend dependencies
         working-directory: ./web
         run: |
-          pnpm install --frozen-lockfile
+          pnpm install
 
       - name: Typecheck and Build SPA
         working-directory: ./web
