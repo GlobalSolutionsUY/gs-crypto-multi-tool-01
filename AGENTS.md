@@ -22,5 +22,16 @@ Para trabajo de UI, copywriting, maquetación o comentarios de código:
 - Copy & texto: `.agents/skills/antislop-copywriting/SKILL.md`
 - Accesibilidad: `.agents/skills/antislop-human/SKILL.md`
 - Responsive / Mobile: `.agents/skills/antislop-layoutmobile/SKILL.md`
-- Comentarios de código: `.agents/skills/antislop-code/SKILL.md`
 <!-- antislop:end -->
+
+---
+
+<!-- workflow:start -->
+## Flujo de Trabajo y Gestión de Tareas (GitHub Workflow)
+Para cualquier tarea, desarrollo, refactorización o documentación:
+- **Regla activa**: `.agents/rules/workflow.md`
+- **Jerarquía obligatoria**: Todo trabajo debe pertenecer a una **Epic** existente en el proyecto de GitHub.
+- **Creación de Issue / Sub-issue**: Crear un sub-issue específico para el goal/tarea dentro de la Epic.
+- **Estado In-Progress**: Pasar el issue inmediatamente a estado `In Progress` en el tablero del proyecto al comenzar.
+- **Branch Asociada**: Todo issue debe tener una rama Git dedicada vinculada (`feat/...`, `docs/...`, `fix/...`) y enlazada en GitHub.
+<!-- workflow:end -->
