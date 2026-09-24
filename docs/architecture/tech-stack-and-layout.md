@@ -40,21 +40,24 @@ El diseño tecnológico implementa de forma estricta los principios de **Ponytai
 
 ---
 
-### 1.3 Infraestructura, Despliegue y Operaciones (Hostinger VPS)
+### 1.3 Infraestructura y Despliegue en Hostinger (Website Unificado Node.js)
 
 > [!IMPORTANT]
-> **Restricción de Despliegue: Hostinger VPS (Sin AWS)**  
-> No se dispone de acceso a Amazon Web Services (AWS) en esta fase. Se descarta cualquier servicio gestionado cloud como S3, Lambda, SQS o ECS. Toda la persistencia, ejecución y proxy se orquestan localmente en el VPS contratado en Hostinger.
+> **Restricción de Despliegue: Único Website Node.js en Hostinger (Sin AWS ni Python en Producción)**  
+> - El plan contratado en Hostinger soporta aplicaciones **Node.js** pero no demonios persistentes en Python (como FastAPI/Uvicorn).
+> - Se aplica la directiva de despliegue unificado: el frontend se compila a archivos estáticos (`dist`), el backend Node.js sirve esos archivos estáticos y también expone la API (`/api/*`), y todo se inicia con un solo comando (`npm start` vía `server.js`).
+> - Véase especificación completa en [docs/deployment/hostinger-nodejs-unified.md](file:///e:/projects/gsolut/mvp-crypto-multi-tool/docs/deployment/hostinger-nodejs-unified.md) y [ADR 0007](file:///e:/projects/gsolut/mvp-crypto-multi-tool/docs/architecture/adr/0007-hostinger-unified-nodejs-deployment.md).
 
 ```text
-Hostinger VPS (Ubuntu 22.04 / 24.04 LTS)
-├── [Nginx Reverse Proxy] (Puertos 80/443 con Certificado SSL Let's Encrypt)
-│   ├── /api/*   ──> Backend FastAPI Container (Puerto interno 8000)
-│   ├── /mcp     ──> FastMCP Server Container (Puerto interno 8001)
-│   └── /*       ──> Web Cockpit SPA Nginx Container (Puerto interno 80)
-└── Almacenamiento Persistente en Disco (Host Mounts)
-    ├── /var/crypto-tool/logs/       (Auditoría y registro JSONL de alertas)
-    └── /var/crypto-tool/artifacts/  (PNGs de gráficos anotados y mapas de calor)
+Hostinger Website (Node.js Application Manager)
+├── server.js (Entrypoint único - comando: npm start)
+│   ├── /api/*          ──> Endpoints de API REST y SSE (Backend)
+│   ├── /health         ──> Chequeo de salud del servicio
+│   ├── /assets/*       ──> Activos estáticos cacheados desde dist/
+│   └── /* (Wildcard)   ──> Servido de dist/index.html (Fallback SPA)
+└── Persistencia Local en Disco
+    ├── logs/alerts.jsonl       (Auditoría y registro JSONL de alertas)
+    └── artifacts/              (Imágenes de gráficos y mapas de calor)
 ```
 
 1. **Hostinger VPS:**

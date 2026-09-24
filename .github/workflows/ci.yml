@@ -1,0 +1,44 @@
+name: CI Pipeline - Lint & Build
+
+on:
+  push:
+    branches: [ master, "feat/*", "fix/*", "docs/*", "refactor/*" ]
+  pull_request:
+    branches: [ master ]
+
+jobs:
+  fullstack-checks:
+    name: Fullstack TypeScript & Node.js Checks
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 12
+
+      - name: Set up Node.js 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: "pnpm"
+          cache-dependency-path: pnpm-lock.yaml
+
+      - name: Install dependencies
+        run: |
+          pnpm install
+          pnpm approve-builds --all
+
+      - name: Validate Server Syntax
+        run: |
+          node --check server.js
+
+      - name: Typecheck Fullstack Codebase
+        run: |
+          pnpm run typecheck
+
+      - name: Build SPA & Server Bundle
+        run: |
+          pnpm run build

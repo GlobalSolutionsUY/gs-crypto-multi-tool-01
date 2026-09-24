@@ -1,0 +1,20 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+echo -e "\033[1;36m=================================================================\033[0m"
+echo -e "\033[1;37m  Crypto Multi-Tool (Radar & Copilot) - Project Actions\033[0m"
+echo -e "\033[1;36m=================================================================\033[0m"
+echo ""
+echo -e "\033[1;33mUsage: make <target>  or  bash scripts/<target>.sh\033[0m"
+echo ""
+echo -e "\033[1;33mAvailable targets:\033[0m"
+echo -e "  \033[1;32mdev         \033[0m Start backend and frontend in local development mode"
+echo -e "  \033[1;32mdocker-dev  \033[0m Run development environment via Docker Compose"
+echo -e "  \033[1;32mdocker-prod \033[0m Run production containers via Docker Compose"
+echo -e "  \033[1;32mdocker-down \033[0m Stop and tear down Docker Compose containers"
+echo -e "  \033[1;32mlint        \033[0m Run Ruff linter and TypeScript typecheck"
+echo -e "  \033[1;32mtest        \033[0m Run Pytest test suite and frontend verification"
+echo -e "  \033[1;32mbuild       \033[0m Build frontend bundle and production Docker images"
+echo -e "  \033[1;32mclean       \033[0m Clean cache artifacts, virtual files, and build outputs"
+echo -e "  \033[1;32mhelp        \033[0m Show this help reference"
+echo ""

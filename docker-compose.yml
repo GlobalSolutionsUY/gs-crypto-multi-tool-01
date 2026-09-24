@@ -1,0 +1,43 @@
+# ==============================================================================
+# Crypto Multi-Tool (Radar & Copilot) - Production Compose (Hostinger VPS)
+# Reference: docs/deployment/hostinger-vps.md
+# ==============================================================================
+
+services:
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    image: ghcr.io/globalsolutionsuy/crypto-multi-tool-backend:latest
+    container_name: cmt-backend
+    restart: always
+    environment:
+      - ENVIRONMENT=production
+      - LOG_LEVEL=${LOG_LEVEL:-INFO}
+      - BINANCE_API_KEY=${BINANCE_API_KEY:-}
+      - BINANCE_API_SECRET=${BINANCE_API_SECRET:-}
+      - BINANCE_BASE_URL=${BINANCE_BASE_URL:-https://api.binance.com}
+      - TELEGRAM_BOT_TOKEN=${TELEGRAM_BOT_TOKEN:-}
+      - TELEGRAM_CHAT_ID=${TELEGRAM_CHAT_ID:-}
+      - BACKEND_PORT=8000
+      - MCP_SERVER_PORT=8001
+      - LOGS_DIR=/app/logs
+      - ARTIFACTS_DIR=/app/artifacts
+    volumes:
+      - /var/crypto-tool/logs:/app/logs
+      - /var/crypto-tool/artifacts:/app/artifacts
+    ports:
+      - "127.0.0.1:8000:8000"
+      - "127.0.0.1:8001:8001"
+
+  web-cockpit:
+    build:
+      context: ./web
+      dockerfile: Dockerfile
+    image: ghcr.io/globalsolutionsuy/crypto-multi-tool-web:latest
+    container_name: cmt-web
+    restart: always
+    ports:
+      - "127.0.0.1:3000:80"
+    depends_on:
+      - backend
