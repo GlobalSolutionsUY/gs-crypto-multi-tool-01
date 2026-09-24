@@ -73,11 +73,11 @@ const server = http.createServer(async (req, res) => {
   const parsedUrl = new URL(req.url, `http://${req.headers.host || "localhost"}`);
   const pathname = parsedUrl.pathname;
 
-  // 1. Dispatch through compiled TypeScript API router if available
-  if (apiRouter) {
+  // 1. Dispatch through compiled Hono API router if available
+  if (apiRouter && (pathname.startsWith("/api") || pathname === "/health")) {
     try {
-      const handled = await apiRouter(req, res, pathname);
-      if (handled) return;
+      await apiRouter(req, res);
+      return;
     } catch (err) {
       console.error("[Crypto Multi-Tool] Error handling API request:", err);
       res.writeHead(500, { "Content-Type": "application/json" });
