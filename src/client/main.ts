@@ -19,7 +19,7 @@ function renderApp(health?: HealthResponse, radar?: RadarStatusResponse, error?:
       </div>
       <div class="system-status">
         <span class="status-dot ${isOnline ? "online" : ""}"></span>
-        <span>${isOnline ? `Node.js Engine: ${health.environment.toUpperCase()}` : (error ? "Desconectado" : "Conectando...")}</span>
+        <span>${isOnline ? `Node.js Engine: ${health.environment.toUpperCase()}` : error ? "Desconectado" : "Conectando..."}</span>
       </div>
     </header>
 
@@ -65,12 +65,14 @@ async function fetchDiagnostics(): Promise<void> {
   try {
     const [healthRes, radarRes] = await Promise.all([
       fetch("/health"),
-      fetch("/api/radar/status").catch(() => null)
+      fetch("/api/radar/status").catch(() => null),
     ]);
 
     if (!healthRes.ok) throw new Error(`HTTP error ${healthRes.status}`);
     const healthData: HealthResponse = await healthRes.json();
-    const radarData: RadarStatusResponse | undefined = radarRes?.ok ? await radarRes.json() : undefined;
+    const radarData: RadarStatusResponse | undefined = radarRes?.ok
+      ? await radarRes.json()
+      : undefined;
 
     renderApp(healthData, radarData);
   } catch (err: unknown) {

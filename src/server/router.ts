@@ -3,10 +3,10 @@
  */
 
 import type { IncomingMessage, ServerResponse } from "node:http";
+import type { HealthResponse, RadarStatusResponse } from "../shared/contracts";
+import { binanceAdapter } from "./binance";
 import { config } from "./config";
 import { logger } from "./logger";
-import { binanceAdapter } from "./binance";
-import type { HealthResponse, RadarStatusResponse } from "../shared/contracts";
 
 function sendJson(res: ServerResponse, statusCode: number, data: unknown): void {
   res.writeHead(statusCode, {
@@ -19,7 +19,7 @@ function sendJson(res: ServerResponse, statusCode: number, data: unknown): void 
 export async function handleApiRequest(
   _req: IncomingMessage,
   res: ServerResponse,
-  pathname: string
+  pathname: string,
 ): Promise<boolean> {
   // 1. Healthcheck endpoints
   if (pathname === "/health" || pathname === "/api/health") {

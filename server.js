@@ -5,8 +5,8 @@
  * Implements ADR 0007: Serves the Web Cockpit SPA static files and exposes backend API endpoints.
  */
 
-import http from "node:http";
 import fs from "node:fs";
+import http from "node:http";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 
@@ -99,7 +99,7 @@ const server = http.createServer(async (req, res) => {
         binance_auth: Boolean(process.env.BINANCE_API_KEY),
         telegram_auth: Boolean(process.env.TELEGRAM_BOT_TOKEN),
         timestamp_utc: new Date().toISOString(),
-      })
+      }),
     );
     return;
   }
@@ -115,7 +115,7 @@ const server = http.createServer(async (req, res) => {
         ready_count: 2,
         btc_regime: "SIDEWAYS_SAFE",
         last_scan_utc: new Date().toISOString(),
-      })
+      }),
     );
     return;
   }
@@ -127,7 +127,7 @@ const server = http.createServer(async (req, res) => {
   }
 
   // 3. Static Files & SPA Fallback
-  let safePath = path.normalize(pathname).replace(/^(\.\.[\/\\])+/, "");
+  let safePath = path.normalize(pathname).replace(/^(\.\.[/\\])+/, "");
   if (safePath === "/" || safePath === "\\") {
     safePath = "/index.html";
   }
@@ -148,7 +148,9 @@ const server = http.createServer(async (req, res) => {
       serveFile(res, fallbackPath, "text/html; charset=utf-8");
     } else {
       res.writeHead(503, { "Content-Type": "text/html; charset=utf-8" });
-      res.end("<h1>Crypto Multi-Tool</h1><p>Building frontend assets... Please refresh shortly.</p>");
+      res.end(
+        "<h1>Crypto Multi-Tool</h1><p>Building frontend assets... Please refresh shortly.</p>",
+      );
     }
   });
 });

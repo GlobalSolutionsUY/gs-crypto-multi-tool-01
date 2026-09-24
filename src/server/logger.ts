@@ -58,7 +58,7 @@ class Logger {
 
   private writeAudit(entry: LogEntry): void {
     try {
-      const line = JSON.stringify(entry) + "\n";
+      const line = `${JSON.stringify(entry)}\n`;
       fs.appendFileSync(this.auditLogPath, line, "utf8");
     } catch {
       // Silent catch to prevent logging failure from crashing the runtime

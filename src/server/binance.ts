@@ -2,9 +2,9 @@
  * Binance Spot Market Data Ingestion Adapter (Read-Only)
  */
 
+import type { MarketCandle } from "../shared/contracts";
 import { config } from "./config";
 import { logger } from "./logger";
-import type { MarketCandle } from "../shared/contracts";
 
 export class BinanceAdapter {
   private baseUrl: string;
@@ -70,20 +70,22 @@ export class BinanceAdapter {
       throw new Error(`Failed to fetch klines for ${symbol}: ${res.statusText}`);
     }
 
-    const rawData = (await res.json()) as Array<[
-      number, // 0: Open time
-      string, // 1: Open
-      string, // 2: High
-      string, // 3: Low
-      string, // 4: Close
-      string, // 5: Volume
-      number, // 6: Close time
-      string, // 7: Quote asset volume
-      number, // 8: Number of trades
-      string, // 9: Taker buy base asset volume
-      string, // 10: Taker buy quote asset volume
-      string  // 11: Ignore
-    ]>;
+    const rawData = (await res.json()) as Array<
+      [
+        number, // 0: Open time
+        string, // 1: Open
+        string, // 2: High
+        string, // 3: Low
+        string, // 4: Close
+        string, // 5: Volume
+        number, // 6: Close time
+        string, // 7: Quote asset volume
+        number, // 8: Number of trades
+        string, // 9: Taker buy base asset volume
+        string, // 10: Taker buy quote asset volume
+        string, // 11: Ignore
+      ]
+    >;
 
     return rawData.map((k) => ({
       timestamp: k[0],
